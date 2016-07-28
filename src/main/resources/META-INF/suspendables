@@ -1,0 +1,12 @@
+org.springframework.web.client.RestTemplate.*
+org.springframework.http.client.HttpComponentsClientHttpRequest.executeInternal
+org.springframework.http.client.AbstractBufferingClientHttpRequest.executeInternal
+org.springframework.http.client.InterceptingClientHttpRequest$InterceptingRequestExecution.execute(org.springframework.http.HttpRequest,byte[])
+org.springframework.http.client.BufferingClientHttpRequestWrapper.executeInternal
+org.springframework.http.client.AbstractBufferingClientHttpRequest.executeInternal
+org.springframework.http.client.InterceptingClientHttpRequest$InterceptingRequestExecution.execute
+org.springframework.http.client.InterceptingClientHttpRequest$InterceptingRequestExecution.execute
+org.springframework.http.client.InterceptingClientHttpRequest.executeInternal
+org.springframework.http.client.AbstractBufferingClientHttpRequest.executeInternal(org.springframework.http.HttpHeaders,byte[])
+org.springframework.http.client.AbstractClientHttpRequest.*
+org.springframework.web.client.DefaultResponseErrorHandler.*

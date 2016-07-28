@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: de.javakaffee:kryo-serializers:0.37">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/de/javakaffee/kryo-serializers/0.37/kryo-serializers-0.37.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/de/javakaffee/kryo-serializers/0.37/kryo-serializers-0.37-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/de/javakaffee/kryo-serializers/0.37/kryo-serializers-0.37-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

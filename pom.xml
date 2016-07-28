@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion>
+
+<groupId>Fiber-HttpClient-demo</groupId>
+<artifactId>Fiber-HttpClient-demo</artifactId>
+<version>1.0-SNAPSHOT</version>
+
+<parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>1.2.3.RELEASE</version>
+</parent>
+
+<properties>
+    <java.version>1.8</java.version>
+    <apache.commons.version>3.3.2</apache.commons.version>
+    <spring.version>4.2.4.RELEASE</spring.version>
+    <quasar.version>0.7.5</quasar.version>
+    <comsat.httpclient.version>0.7.0</comsat.httpclient.version>
+    <capsule.version>1.0.2</capsule.version>
+    <capsule.maven.version>1.0.3</capsule.maven.version>
+    <capsule.maven.plugin.version>1.3.0</capsule.maven.plugin.version>
+    <maven.exec.plugin.version>1.5.0</maven.exec.plugin.version>
+</properties>
+
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context-support</artifactId>
+        <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${apache.commons.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.fasterxml.jackson.datatype</groupId>
+        <artifactId>jackson-datatype-joda</artifactId>
+    </dependency>
+
+    <!-- fiber-->
+    <dependency>
+        <groupId>co.paralleluniverse</groupId>
+        <artifactId>quasar-core</artifactId>
+        <version>${quasar.version}</version>
+        <classifier>jdk8</classifier>
+    </dependency>
+
+    <!--use for http client request-->
+    <dependency>
+        <groupId>co.paralleluniverse</groupId>
+        <artifactId>comsat-httpclient</artifactId>
+        <version>${comsat.httpclient.version}</version>
+    </dependency>
+
+</dependencies>
+<build>
+    <finalName>fiber-demo</finalName>
+    <plugins>
+
+        <!-- BUILD CAPSULES EXAMPLE -->
+        <plugin>
+            <groupId>sg.enixsoft</groupId>
+            <artifactId>capsule-maven-plugin</artifactId>
+            <version>${capsule.maven.plugin.version}</version>
+            <configuration>
+
+                <!-- REQUIRED -->
+                <appClass>test.tigerMoon.Application</appClass>
+
+                <type>fat</type>
+
+                <execPluginConfig>root</execPluginConfig>
+                <customDescriptor>-cap</customDescriptor>
+
+                <properties>
+                    <property>
+                        <key>propertyName1</key>
+                        <value>propertyValue1</value>
+                    </property>
+                    <property>
+                        <key>propertyName2</key>
+                        <!-- empty value is ok -->
+                    </property>
+                </properties>
+
+                <manifest>
+                    <entry>
+                        <key>JVM-Args</key>
+                        <value>-Xmx512m</value>
+                    </entry>
+                    <entry>
+                        <key>Java-Agents</key>
+                        <value>quasar-core-0.7.5-jdk8.jar</value>
+                    </entry>
+                    <entry>
+                        <key>Repositories</key>
+                        <value>local central</value>
+                    </entry>
+                </manifest>
+
+            </configuration>
+            <!-- BUILD CAPSULES AUTOMATICALLY AT PACKAGE PHASE -->
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>build</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+        <!--use for detect suspendable classes-->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.8</version>
+            <executions>
+                <execution>
+                    <id>instrument-suspendables</id>
+                    <phase>compile</phase>
+                    <configuration>
+                        <target>
+                            <property name="ant_classpath" refid="maven.dependency.classpath"/>
+                            <taskdef name="scanSuspendables"
+                                     classname="co.paralleluniverse.fibers.instrument.SuspendablesScanner"
+                                     classpath="${ant_classpath}"/>
+                            <scanSuspendables auto="false"
+                                              suspendablesFile="target/resources/META-INF/suspendables">
+                            </scanSuspendables>
+                        </target>
+                    </configuration>
+                    <goals>
+                        <goal>run</goal>
+                    </goals>
+                </execution>
+
+                <execution>
+                    <id>instrument-classes</id>
+                    <phase>compile</phase>
+                    <configuration>
+                        <tasks>
+                            <property name="ant_classpath" refid="maven.dependency.classpath"/>
+                            <taskdef name="instrumentationTask"
+                                     classname="co.paralleluniverse.fibers.instrument.InstrumentationTask"
+                                     classpath="${ant_classpath}"/>
+                            <!-- Use "allowMonitors" to allow instrumenting methods containing synchronization -->
+                            instrumentationTask allowMonitors="true"
+                            <instrumentationTask>
+                                <fileset dir="${project.build.directory}/classes/" includes="**/*.class"/>
+                            </instrumentationTask>
+                        </tasks>
+                    </configuration>
+                    <goals>
+                        <goal>run</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+
+        <!-- Collecting classpath entries as properties in the form groupId:artifactId:type:[classifier]
+             as per http://maven.apache.org/plugins/maven-dependency-plugin/properties-mojo.html -->
+        <plugin>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>2.5.1</version>
+            <executions>
+                <execution>
+                    <id>getClasspathFilenames</id>
+                    <goals>
+                        <goal>properties</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+</build>
+
+</project>

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: co.paralleluniverse:quasar-core:jdk8:0.7.5">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/co/paralleluniverse/quasar-core/0.7.5/quasar-core-0.7.5-jdk8.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/co/paralleluniverse/quasar-core/0.7.5/quasar-core-0.7.5-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/co/paralleluniverse/quasar-core/0.7.5/quasar-core-0.7.5-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

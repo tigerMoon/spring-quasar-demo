@@ -1,0 +1,5 @@
+org.springframework.http.client.ClientHttpRequest.*
+org.springframework.http.client.ClientHttpRequestExecution.*
+org.springframework.http.client.ClientHttpRequestInterceptor.*
+org.apache.http.client.HttpClient.*
+org.springframework.web.client.ResponseErrorHandler.*
