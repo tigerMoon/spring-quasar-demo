@@ -18,7 +18,7 @@
     <java.version>1.8</java.version>
     <apache.commons.version>3.3.2</apache.commons.version>
     <spring.version>4.2.4.RELEASE</spring.version>
-    <quasar.version>0.7.5</quasar.version>
+    <quasar.version>0.7.6</quasar.version>
     <comsat.httpclient.version>0.7.0</comsat.httpclient.version>
     <capsule.version>1.0.2</capsule.version>
     <capsule.maven.version>1.0.3</capsule.maven.version>
@@ -108,7 +108,7 @@
                     </entry>
                     <entry>
                         <key>Java-Agents</key>
-                        <value>quasar-core-0.7.5-jdk8.jar</value>
+                        <value>quasar-core-0.7.6-jdk8.jar</value>
                     </entry>
                     <entry>
                         <key>Repositories</key>

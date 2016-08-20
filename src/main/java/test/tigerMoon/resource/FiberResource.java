@@ -3,6 +3,9 @@ package test.tigerMoon.resource;
 import co.paralleluniverse.fibers.Fiber;
 import co.paralleluniverse.fibers.SuspendExecution;
 import co.paralleluniverse.fibers.Suspendable;
+import co.paralleluniverse.strands.SuspendableRunnable;
+import co.paralleluniverse.strands.channels.Channel;
+import co.paralleluniverse.strands.channels.Channels;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,27 @@ public class FiberResource {
                 return getData();
             }
         }.start();
+    }
+
+
+    public Fiber<Channel<Object>> getServiceDataWithChannel() {
+        return new Fiber<Channel<Object>>() {
+            protected Channel<Object> run() throws SuspendExecution, InterruptedException {
+                logger.info("fiber get data. fiberId:{} ", this.getId());
+                Object returnData = getData();
+                Channel<Object> objectChannel = Channels.newChannel(100);
+                objectChannel.send(returnData);
+                return objectChannel;
+            }
+        }.start();
+    }
+
+    public Fiber<Void> getServiceDataWithChannel(Channel<Object> objectChannel) {
+        return new Fiber<Void>((SuspendableRunnable) () -> {
+            logger.info("fiber get data. ");
+            Object returnData = getData();
+            objectChannel.send(returnData);
+        }).start();
     }
 
     /**
