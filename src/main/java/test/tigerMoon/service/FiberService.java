@@ -1,6 +1,7 @@
 package test.tigerMoon.service;
 
 import co.paralleluniverse.fibers.Fiber;
+import co.paralleluniverse.fibers.FiberFactory;
 import co.paralleluniverse.fibers.FiberUtil;
 import co.paralleluniverse.fibers.SuspendExecution;
 import co.paralleluniverse.strands.channels.Channel;
@@ -32,6 +33,9 @@ public class FiberService {
         Fiber<Object> fiber3 = fiberResource.getServiceData();
 
         try {
+            fiber1.get();
+            fiber1.get();
+
             return FiberUtil.get(20, TimeUnit.SECONDS,fiber1,fiber2,fiber3);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -39,7 +43,10 @@ public class FiberService {
         } catch (TimeoutException e) {
             e.printStackTrace();
             return null;
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
 
@@ -78,10 +85,17 @@ public class FiberService {
     public Object getChannelDataElegant(){
         Channel<Object> objectChannel = Channels.newChannel(100);
         fiberResource.getServiceDataWithChannel(objectChannel);
+
+        Fiber<Object> fiber = new Fiber<Object>() {
+            protected Object run() throws SuspendExecution, InterruptedException {
+                return objectChannel.receive();
+            }
+        }.start();
+
         try {
-            return objectChannel.receive();
-        } catch (SuspendExecution suspendExecution) {
-            suspendExecution.printStackTrace();
+            return fiber.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
