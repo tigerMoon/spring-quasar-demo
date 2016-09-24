@@ -34,6 +34,14 @@ public class FiberController {
         return deferredResult;
     }
 
+    @RequestMapping(value = "/client/data/fiber", method = RequestMethod.GET)
+    public DeferredResult<Object> getClientDatainfiber() {
+        DeferredResult<Object> deferredResult = new DeferredResult<>();
+        Object result = fiberService.getClientDataInFiber();
+        deferredResult.setResult(result);
+        return deferredResult;
+    }
+
     @RequestMapping(value = "/client/data/channel", method = RequestMethod.GET)
     public DeferredResult<Object> getClientDataChanel() {
         DeferredResult<Object> deferredResult = new DeferredResult<>();

@@ -4,6 +4,8 @@ import co.paralleluniverse.fibers.Fiber;
 import co.paralleluniverse.fibers.FiberFactory;
 import co.paralleluniverse.fibers.FiberUtil;
 import co.paralleluniverse.fibers.SuspendExecution;
+import co.paralleluniverse.strands.Strand;
+import co.paralleluniverse.strands.SuspendableRunnable;
 import co.paralleluniverse.strands.channels.Channel;
 import co.paralleluniverse.strands.channels.Channels;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +50,54 @@ public class FiberService {
         }
         return null;
     }
+
+    public Object getClientDataInFiber(){
+        Fiber<Object> fiber1 = fiberResource.getServiceData();
+        Fiber<Object> fiber2 = fiberResource.getServiceData();
+        Fiber<Object> fiber3 = fiberResource.getServiceData();
+
+        Fiber<Object> start = new Fiber<Object>() {
+            @Override
+            protected Object run() throws SuspendExecution, InterruptedException {
+                // your code
+                try {
+                    return fiber1.get();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        }.start();
+
+   /* try {
+        Strand.join(start);
+        return start.get();
+    } catch (ExecutionException e) {
+        e.printStackTrace();
+        return null;
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+        return null;
+    }*/
+
+        try {
+            return start.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return null;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+  /*  public Object getClientDataInStrund(){
+        Fiber<Object> fiber1 = fiberResource.getServiceData();
+        Fiber<Object> fiber2 = fiberResource.getServiceData();
+        Fiber<Object> fiber3 = fiberResource.getServiceData();
+
+
+    }*/
 
 
     /*
@@ -102,7 +152,11 @@ public class FiberService {
         return null;
     }
 
-
+    public void fibervoid(){
+        new Fiber<Void>((SuspendableRunnable) () -> {
+            // your code
+        }).inheritThreadLocals().start();
+    }
 
 
     public Object getServerData() {

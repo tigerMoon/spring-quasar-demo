@@ -26,6 +26,8 @@ public class FiberResource {
         return new Fiber<Object>() {
             protected Object run() throws SuspendExecution, InterruptedException {
                 logger.info("fiber get data. fiberId:{} ", this.getId());
+                this.sleep(5000);
+                logger.info("sleep over ");
                 return getData();
             }
         }.start();
