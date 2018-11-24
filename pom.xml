@@ -161,8 +161,7 @@
                                      classname="co.paralleluniverse.fibers.instrument.InstrumentationTask"
                                      classpath="${ant_classpath}"/>
                             <!-- Use "allowMonitors" to allow instrumenting methods containing synchronization -->
-                            instrumentationTask allowMonitors="true"
-                            <instrumentationTask>
+                            <instrumentationTask allowMonitors="true" allowBlocking="true" check="true" verbose="true" debug="true">
                                 <fileset dir="${project.build.directory}/classes/" includes="**/*.class"/>
                             </instrumentationTask>
                         </tasks>
